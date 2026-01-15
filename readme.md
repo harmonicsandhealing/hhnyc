@@ -1,6 +1,6 @@
-# Lumina Restaurant Website
+# harmonics and healing Website
 
-A modern, smooth-scrolling restaurant website with parallax effects similar to Atomix NYC.
+A modern, smooth-scrolling healing website with parallax effects similar to Atomix NYC.
 
 ## Features
 
