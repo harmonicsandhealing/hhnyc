@@ -426,6 +426,17 @@ body {
 .menu-item {
     background: var(--secondary-color);
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.menu-item-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: 2rem;
 }
 
 .menu-item img {
@@ -452,6 +463,12 @@ body {
     font-size: 1rem;
     color: var(--light-text);
     line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.menu-item .cta-button {
+    margin-top: auto;
+    align-self: center;
 }
 
 
