@@ -1,42 +1,7 @@
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
 
-// Mobile Navigation Toggle
-const burger = document.querySelector('.burger');
-const nav = document.querySelector('.nav-links');
-const navLinks = document.querySelectorAll('.nav-links a');
-
-burger.addEventListener('click', () => {
-    nav.classList.toggle('active');
-    burger.classList.toggle('active');
-});
-
-// Close mobile menu when clicking on a link
-navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        nav.classList.remove('active');
-        burger.classList.remove('active');
-    });
-});
-
-// Smooth scrolling for navigation links
-navLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const targetId = link.getAttribute('href');
-        const targetSection = document.querySelector(targetId);
-        
-        if (targetSection) {
-            const offsetTop = targetSection.offsetTop - 80; // Account for fixed navbar
-            window.scrollTo({
-                top: offsetTop,
-                behavior: 'smooth'
-            });
-        }
-    });
-});
-
-// Scroll Animations
+// Scroll Animations Function
 function initScrollAnimations() {
     // Fade in elements on scroll
     gsap.utils.toArray('[data-scroll]').forEach(element => {
@@ -59,9 +24,9 @@ function initScrollAnimations() {
             trigger: '.hero',
             start: 'top top',
             end: 'bottom top',
-            scrub: 0.5  // Smoother scrub value
+            scrub: 0.5
         },
-        y: 150,  // Reduced movement
+        y: 150,
         opacity: 0.5
     });
 
@@ -73,9 +38,9 @@ function initScrollAnimations() {
                 trigger: item,
                 start: 'top bottom',
                 end: 'bottom top',
-                scrub: 0.5  // Reduced scrub for smoother effect
+                scrub: 0.5
             },
-            y: -50 * speed,  // Reduced movement
+            y: -50 * speed,
             ease: 'none'
         });
     });
@@ -173,16 +138,6 @@ function initScrollAnimations() {
     });
 }
 
-// Navbar background change on scroll
-window.addEventListener('scroll', () => {
-    const navbar = document.querySelector('.navbar');
-    if (window.scrollY > 100) {
-        navbar.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
-    } else {
-        navbar.style.boxShadow = 'none';
-    }
-});
-
 // Lazy loading for images
 function initLazyLoading() {
     const images = document.querySelectorAll('img[loading="lazy"]');
@@ -201,27 +156,13 @@ function initLazyLoading() {
 
     images.forEach(img => {
         imageObserver.observe(img);
-        // Trigger loaded class after image actually loads
         img.addEventListener('load', () => {
             img.classList.add('loaded');
         });
     });
 }
 
-
-// Refresh ScrollTrigger on window resize
-window.addEventListener('resize', () => {
-    ScrollTrigger.refresh();
-    randomMobileImage();
-});
-
-// Smooth scrolling configuration
-ScrollTrigger.config({
-    limitCallbacks: true,
-    syncInterval: 150
-});
-
-// Show random image on mobile - DEFINED BEFORE USE
+// Show random image on mobile
 function randomMobileImage() {
     if (window.innerWidth <= 768) {
         const gridItems = document.querySelectorAll('.grid-item');
@@ -230,82 +171,18 @@ function randomMobileImage() {
             const randomIndex = Math.floor(Math.random() * gridItems.length);
             gridItems[randomIndex].classList.add('mobile-visible');
         }
-    } else {
-        const gridItems = document.querySelectorAll('.grid-item');
-        gridItems.forEach(item => item.classList.remove('mobile-visible'));
     }
 }
 
-// SINGLE DOMContentLoaded for everything
-document.addEventListener('DOMContentLoaded', () => {
-    randomMobileImage();
-    initScrollAnimations();
-    initLazyLoading();
-    
-    // Inquiry form handler
-    const inquiryForm = document.getElementById('inquiry-form');
-    if (inquiryForm) {
-        inquiryForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const name = document.getElementById('inquiry-name').value;
-            const email = document.getElementById('inquiry-email').value;
-            const phone = document.getElementById('inquiry-phone').value;
-            const message = document.getElementById('inquiry-message').value;
-            
-            if (!email || !email.includes('@')) {
-                document.getElementById('form-error').style.display = 'block';
-                document.getElementById('form-error').textContent = '✗ Please enter a valid email address.';
-                return;
-            }
-            
-            const subject = encodeURIComponent('Inquiry about Gong Bath Session');
-            const body = encodeURIComponent(
-                `Hello Harmonics and Healings,\n\n` +
-                `I am interested in learning more about your Gong Bath sessions.\n\n` +
-                `Name: ${name}\n` +
-                `Email: ${email}\n` +
-                `Phone: ${phone || 'Not provided'}\n\n` +
-                `Questions:\n${message}\n\n` +
-                `Thank you!`
-            );
-            
-            const mailtoLink = `mailto:harmonicsandhealingsny@gmail.com?subject=${subject}&body=${body}`;
-            window.location.href = mailtoLink;
-            
-            document.getElementById('form-success').style.display = 'block';
-            document.getElementById('form-error').style.display = 'none';
-            inquiryForm.style.display = 'none';
-            
-            setTimeout(function() {
-                closeInquiryModal();
-                inquiryForm.style.display = 'block';
-            }, 3000);
-        });
-    }
-});
-
 // Calendar Modal Functions
 function openCalendar(type) {
-    console.log('openCalendar called with type:', type);
-    
     const modal = document.getElementById('calendar-modal');
     const modalTitle = document.getElementById('modal-title');
     
-    if (!modal) {
-        console.error('Modal element not found!');
-        return;
-    }
-    
-    if (!modalTitle) {
-        console.error('Modal title element not found!');
-        return;
-    }
+    if (!modal || !modalTitle) return;
     
     const calendars = document.querySelectorAll('.calendar-container');
-    calendars.forEach(cal => {
-        cal.style.display = 'none';
-    });
+    calendars.forEach(cal => cal.style.display = 'none');
     
     if (type === 'healing') {
         const healingCal = document.getElementById('calendar-healing');
@@ -339,26 +216,6 @@ function closeCalendar() {
     }
 }
 
-window.onclick = function(event) {
-    const calendarModal = document.getElementById('calendar-modal');
-    const inquiryModal = document.getElementById('inquiry-modal');
-    
-    if (event.target === calendarModal) {
-        closeCalendar();
-    }
-    
-    if (event.target === inquiryModal) {
-        closeInquiryModal();
-    }
-}
-
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'Escape') {
-        closeCalendar();
-        closeInquiryModal();
-    }
-});
-
 function openInquiryModal() {
     const modal = document.getElementById('inquiry-modal');
     if (modal) {
@@ -372,9 +229,150 @@ function closeInquiryModal() {
     if (modal) {
         modal.style.display = 'none';
         document.body.style.overflow = 'auto';
-        
-        document.getElementById('inquiry-form').reset();
-        document.getElementById('form-success').style.display = 'none';
-        document.getElementById('form-error').style.display = 'none';
+        const form = document.getElementById('inquiry-form');
+        if (form) form.reset();
+        const success = document.getElementById('form-success');
+        if (success) success.style.display = 'none';
+        const error = document.getElementById('form-error');
+        if (error) error.style.display = 'none';
     }
 }
+
+// ALL DOM-dependent code inside DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+    // Mobile Navigation Toggle
+    const burger = document.querySelector('.burger');
+    const nav = document.querySelector('.nav-links');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    if (burger && nav) {
+        burger.addEventListener('click', () => {
+            nav.classList.toggle('active');
+            burger.classList.toggle('active');
+        });
+    }
+
+    if (navLinks) {
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (nav) nav.classList.remove('active');
+                if (burger) burger.classList.remove('active');
+            });
+        });
+
+        // Smooth scrolling
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                
+                if (targetSection) {
+                    const offsetTop = targetSection.offsetTop - 80;
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    }
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+        const navbar = document.querySelector('.navbar');
+        if (navbar) {
+            if (window.scrollY > 100) {
+                navbar.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+            } else {
+                navbar.style.boxShadow = 'none';
+            }
+        }
+    });
+
+    // Initialize animations
+    initScrollAnimations();
+    initLazyLoading();
+    randomMobileImage();
+
+    // Inquiry form handler
+    const inquiryForm = document.getElementById('inquiry-form');
+    if (inquiryForm) {
+        inquiryForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('inquiry-name').value;
+            const email = document.getElementById('inquiry-email').value;
+            const phone = document.getElementById('inquiry-phone').value;
+            const message = document.getElementById('inquiry-message').value;
+            
+            if (!email || !email.includes('@')) {
+                const errorEl = document.getElementById('form-error');
+                if (errorEl) {
+                    errorEl.style.display = 'block';
+                    errorEl.textContent = '✗ Please enter a valid email address.';
+                }
+                return;
+            }
+            
+            const subject = encodeURIComponent('Inquiry about Gong Bath Session');
+            const body = encodeURIComponent(
+                `Hello Harmonics and Healings,\n\n` +
+                `I am interested in learning more about your Gong Bath sessions.\n\n` +
+                `Name: ${name}\n` +
+                `Email: ${email}\n` +
+                `Phone: ${phone || 'Not provided'}\n\n` +
+                `Questions:\n${message}\n\n` +
+                `Thank you!`
+            );
+            
+            const mailtoLink = `mailto:harmonicsandhealingsny@gmail.com?subject=${subject}&body=${body}`;
+            window.location.href = mailtoLink;
+            
+            const successEl = document.getElementById('form-success');
+            const errorEl = document.getElementById('form-error');
+            if (successEl) successEl.style.display = 'block';
+            if (errorEl) errorEl.style.display = 'none';
+            inquiryForm.style.display = 'none';
+            
+            setTimeout(function() {
+                closeInquiryModal();
+                inquiryForm.style.display = 'block';
+            }, 3000);
+        });
+    }
+});
+
+// Window resize handlers
+window.addEventListener('resize', () => {
+    ScrollTrigger.refresh();
+    randomMobileImage();
+});
+
+// Click outside modal to close
+window.onclick = function(event) {
+    const calendarModal = document.getElementById('calendar-modal');
+    const inquiryModal = document.getElementById('inquiry-modal');
+    
+    if (event.target === calendarModal) {
+        closeCalendar();
+    }
+    
+    if (event.target === inquiryModal) {
+        closeInquiryModal();
+    }
+}
+
+// ESC key to close modals
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeCalendar();
+        closeInquiryModal();
+    }
+});
+
+// Smooth scrolling configuration
+ScrollTrigger.config({
+    limitCallbacks: true,
+    syncInterval: 150
+});
