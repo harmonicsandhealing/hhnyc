@@ -215,24 +215,48 @@ window.addEventListener('load', () => {
 
 // Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    randomMobileImage(); // Run first
     initScrollAnimations();
     initLazyLoading();
-    randomMobileImage();
 });
+
+// Also run immediately in case DOM is already loaded
+if (document.readyState === 'loading') {
+    // DOM still loading, DOMContentLoaded will fire
+} else {
+    // DOM already loaded
+    randomMobileImage();
+}
 
 // Show random image on mobile
 function randomMobileImage() {
     // Only run on mobile
     if (window.innerWidth <= 768) {
         const gridItems = document.querySelectorAll('.grid-item');
+        console.log('Mobile detected. Grid items found:', gridItems.length);
+        
         if (gridItems.length > 0) {
+            // Remove mobile-visible from all items first
+            gridItems.forEach(item => item.classList.remove('mobile-visible'));
+            
             // Pick random index
             const randomIndex = Math.floor(Math.random() * gridItems.length);
+            console.log('Showing image at index:', randomIndex);
+            
             // Add visible class to random item
             gridItems[randomIndex].classList.add('mobile-visible');
         }
+    } else {
+        // On desktop, make sure all are visible
+        const gridItems = document.querySelectorAll('.grid-item');
+        gridItems.forEach(item => item.classList.remove('mobile-visible'));
     }
 }
+
+// Run on window resize too
+window.addEventListener('resize', () => {
+    randomMobileImage();
+});
 
 // Refresh ScrollTrigger on window resize
 window.addEventListener('resize', () => {

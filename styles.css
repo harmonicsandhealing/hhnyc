@@ -234,12 +234,12 @@ body {
     }
     
     .grid-item {
-        display: none;
+        display: block !important;
     }
     
-    /* JavaScript will add this class to one random item */
-    .grid-item.mobile-visible {
-        display: block;
+    /* Hide all except the one with mobile-visible class */
+    .grid-item:not(.mobile-visible) {
+        display: none !important;
     }
 }
 
