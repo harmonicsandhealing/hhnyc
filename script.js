@@ -232,27 +232,51 @@ ScrollTrigger.config({
 
 // Calendar Modal Functions
 function openCalendar(type) {
+    console.log('openCalendar called with type:', type);
+    
     const modal = document.getElementById('calendar-modal');
     const modalTitle = document.getElementById('modal-title');
     
+    if (!modal) {
+        console.error('Modal element not found!');
+        return;
+    }
+    
+    if (!modalTitle) {
+        console.error('Modal title element not found!');
+        return;
+    }
+    
     // Hide all calendars first
-    document.querySelectorAll('.calendar-container').forEach(cal => {
+    const calendars = document.querySelectorAll('.calendar-container');
+    console.log('Found calendars:', calendars.length);
+    calendars.forEach(cal => {
         cal.style.display = 'none';
     });
     
     // Show the selected calendar and update title
     if (type === 'healing') {
-        document.getElementById('calendar-healing').style.display = 'block';
-        modalTitle.textContent = 'Book Energy Healing Session';
+        const healingCal = document.getElementById('calendar-healing');
+        if (healingCal) {
+            healingCal.style.display = 'block';
+            modalTitle.textContent = 'Book Energy Healing Session';
+        }
     } else if (type === 'in-home') {
-        document.getElementById('calendar-in-home').style.display = 'block';
-        modalTitle.textContent = 'Book Aura Tuning Session';
+        const inHomeCal = document.getElementById('calendar-in-home');
+        if (inHomeCal) {
+            inHomeCal.style.display = 'block';
+            modalTitle.textContent = 'Book Aura Tuning Session';
+        }
     } else if (type === 'gong') {
-        document.getElementById('calendar-gong').style.display = 'block';
-        modalTitle.textContent = 'Book Sound Bath Session';
+        const gongCal = document.getElementById('calendar-gong');
+        if (gongCal) {
+            gongCal.style.display = 'block';
+            modalTitle.textContent = 'Book Sound Bath Session';
+        }
     }
     
     // Show modal
+    console.log('Showing modal');
     modal.style.display = 'block';
     document.body.style.overflow = 'hidden'; // Prevent background scrolling
 }
