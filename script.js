@@ -289,9 +289,15 @@ function closeCalendar() {
 
 // Close modal when clicking outside of it
 window.onclick = function(event) {
-    const modal = document.getElementById('calendar-modal');
-    if (event.target === modal) {
+    const calendarModal = document.getElementById('calendar-modal');
+    const inquiryModal = document.getElementById('inquiry-modal');
+    
+    if (event.target === calendarModal) {
         closeCalendar();
+    }
+    
+    if (event.target === inquiryModal) {
+        closeInquiryModal();
     }
 }
 
@@ -299,5 +305,81 @@ window.onclick = function(event) {
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
         closeCalendar();
+        closeInquiryModal();
+    }
+});
+
+// Inquiry Modal Functions
+function openInquiryModal() {
+    const modal = document.getElementById('inquiry-modal');
+    if (modal) {
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeInquiryModal() {
+    const modal = document.getElementById('inquiry-modal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        
+        // Reset form
+        document.getElementById('inquiry-form').reset();
+        document.getElementById('form-success').style.display = 'none';
+        document.getElementById('form-error').style.display = 'none';
+    }
+}
+
+// Handle inquiry form submission
+document.addEventListener('DOMContentLoaded', function() {
+    const inquiryForm = document.getElementById('inquiry-form');
+    
+    if (inquiryForm) {
+        inquiryForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('inquiry-name').value;
+            const email = document.getElementById('inquiry-email').value;
+            const phone = document.getElementById('inquiry-phone').value;
+            const message = document.getElementById('inquiry-message').value;
+            
+            // Validate email
+            if (!email || !email.includes('@')) {
+                document.getElementById('form-error').style.display = 'block';
+                document.getElementById('form-error').textContent = '✗ Please enter a valid email address.';
+                return;
+            }
+            
+            // Create mailto link
+            const subject = encodeURIComponent('Inquiry about Gong Bath Session');
+            const body = encodeURIComponent(
+                `Hello Harmonics and Healings,\n\n` +
+                `I am interested in learning more about your Gong Bath sessions.\n\n` +
+                `Name: ${name}\n` +
+                `Email: ${email}\n` +
+                `Phone: ${phone || 'Not provided'}\n\n` +
+                `Questions:\n${message}\n\n` +
+                `Thank you!`
+            );
+            
+            const mailtoLink = `mailto:harmonicsandhealingsny@gmail.com?subject=${subject}&body=${body}`;
+            
+            // Open email client
+            window.location.href = mailtoLink;
+            
+            // Show success message
+            document.getElementById('form-success').style.display = 'block';
+            document.getElementById('form-error').style.display = 'none';
+            
+            // Hide form
+            inquiryForm.style.display = 'none';
+            
+            // Close modal after 3 seconds
+            setTimeout(function() {
+                closeInquiryModal();
+                inquiryForm.style.display = 'block';
+            }, 3000);
+        });
     }
 });
