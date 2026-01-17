@@ -206,7 +206,7 @@ body {
 /* Image Grid Section */
 .image-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 0;
     padding: 0;
 }
@@ -225,6 +225,22 @@ body {
 
 .grid-item:hover img {
     transform: scale(1.1);
+}
+
+/* Mobile: Show only 1 random image */
+@media (max-width: 768px) {
+    .image-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .grid-item {
+        display: none;
+    }
+    
+    /* JavaScript will add this class to one random item */
+    .grid-item.mobile-visible {
+        display: block;
+    }
 }
 
 .about-section {

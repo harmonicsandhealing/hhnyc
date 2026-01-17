@@ -217,7 +217,22 @@ window.addEventListener('load', () => {
 document.addEventListener('DOMContentLoaded', () => {
     initScrollAnimations();
     initLazyLoading();
+    randomMobileImage();
 });
+
+// Show random image on mobile
+function randomMobileImage() {
+    // Only run on mobile
+    if (window.innerWidth <= 768) {
+        const gridItems = document.querySelectorAll('.grid-item');
+        if (gridItems.length > 0) {
+            // Pick random index
+            const randomIndex = Math.floor(Math.random() * gridItems.length);
+            // Add visible class to random item
+            gridItems[randomIndex].classList.add('mobile-visible');
+        }
+    }
+}
 
 // Refresh ScrollTrigger on window resize
 window.addEventListener('resize', () => {
