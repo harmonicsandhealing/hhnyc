@@ -227,19 +227,15 @@ body {
     transform: scale(1.1);
 }
 
-/* Mobile: Show only 1 random image */
+/* Mobile: Show only first image */
 @media (max-width: 768px) {
     .image-grid {
         grid-template-columns: 1fr;
     }
     
-    .grid-item {
-        display: block !important;
-    }
-    
-    /* Hide all except the one with mobile-visible class */
-    .grid-item:not(.mobile-visible) {
-        display: none !important;
+    /* Hide all except first */
+    .grid-item:not(:first-child) {
+        display: none;
     }
 }
 
