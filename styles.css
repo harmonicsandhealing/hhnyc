@@ -242,6 +242,8 @@ body {
 .about-section {
     padding: 8rem 2rem;
     background: white;
+    opacity: 1;
+    visibility: visible;
 }
 
 .about-content {
@@ -251,6 +253,11 @@ body {
     grid-template-columns: 1fr 1fr;
     gap: 4rem;
     align-items: center;
+}
+
+.about-text {
+    opacity: 1;
+    visibility: visible;
 }
 
 .about-text h2 {
@@ -273,12 +280,15 @@ body {
     border-radius: 8px;
     overflow: hidden;
     height: 500px;
+    opacity: 1;
+    visibility: visible;
 }
 
 .about-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    opacity: 1;
 }
 
 /* Experience Section */
@@ -373,7 +383,49 @@ body {
     color: white;
 }
 
-/* Parallax Section */
+/* Extended Parallax Section - Contains Menu and Quote */
+.parallax-section-extended {
+    min-height: 120vh;
+    background-image: url('images/parallax_bg.jpeg');
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 4rem 0;
+}
+
+.parallax-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 1;
+}
+
+.parallax-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: white;
+    padding: 6rem 2rem;
+}
+
+.parallax-content blockquote {
+    font-size: clamp(1.5rem, 3vw, 3rem);
+    font-weight: 300;
+    font-style: italic;
+    letter-spacing: 2px;
+    max-width: 800px;
+    margin: 0 auto;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+/* Old Parallax Section (if needed separately) */
 .parallax-section {
     height: 60vh;
     background-image: url('images/parallax_bg.jpeg');
@@ -386,39 +438,20 @@ body {
     justify-content: center;
 }
 
-.parallax-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-}
-
-.parallax-content {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    color: white;
-}
-
-.parallax-content blockquote {
-    font-size: clamp(1.5rem, 3vw, 3rem);
-    font-weight: 300;
-    font-style: italic;
-    letter-spacing: 2px;
-    max-width: 800px;
-}
-
-/* Menu Section */
+/* Menu Section - Transparent to show parallax */
 .menu-section {
     padding: 8rem 2rem;
-    background: white;
+    background: transparent;
+    opacity: 1;
+    visibility: visible;
+    position: relative;
 }
 
 .menu-content {
     max-width: 1200px;
     margin: 0 auto;
+    position: relative;
+    z-index: 2;
 }
 
 .menu-content h2 {
@@ -427,7 +460,8 @@ body {
     letter-spacing: 2px;
     text-align: center;
     margin-bottom: 4rem;
-    color: var(--accent-color);
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .menu-grid {
@@ -437,12 +471,17 @@ body {
 }
 
 .menu-item {
-    background: var(--secondary-color);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
     text-align: center;
     display: flex;
     flex-direction: column;
-    border-radius: 8px;
+    border-radius: 12px;
     overflow: hidden;
+    opacity: 1;
+    visibility: visible;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .menu-item-content {
@@ -792,7 +831,8 @@ body {
         gap: 2rem;
     }
 
-    .parallax-section {
+    .parallax-section,
+    .parallax-section-extended {
         background-attachment: scroll;
     }
 }

@@ -1,6 +1,18 @@
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
 
+// Force scroll to top on page load
+if (history.scrollRestoration) {
+    history.scrollRestoration = 'manual';
+}
+
+window.addEventListener('beforeunload', function () {
+    window.scrollTo(0, 0);
+});
+
+// Scroll to top immediately
+window.scrollTo(0, 0);
+
 // Scroll Animations Function
 function initScrollAnimations() {
     // Fade in elements on scroll
@@ -18,7 +30,7 @@ function initScrollAnimations() {
         });
     });
 
-    // Parallax effect on hero content (optimized)
+    // Parallax effect on hero content (optimized, keep visible)
     gsap.to('.hero-content', {
         scrollTrigger: {
             trigger: '.hero',
@@ -27,46 +39,46 @@ function initScrollAnimations() {
             scrub: 0.5
         },
         y: 150,
-        opacity: 0.5
+        opacity: 0.3
     });
 
-    // Parallax effect on grid images (reduced for better performance)
+    // Parallax effect on grid images - simplified
     gsap.utils.toArray('.grid-item').forEach(item => {
-        const speed = item.getAttribute('data-scroll-speed') || 1;
         gsap.to(item, {
             scrollTrigger: {
                 trigger: item,
                 start: 'top bottom',
                 end: 'bottom top',
-                scrub: 0.5
+                scrub: 0.3
             },
-            y: -50 * speed,
+            y: -30,
             ease: 'none'
         });
     });
 
-    // About section animations
+    // About section animations - simplified to prevent disappearing
     gsap.from('.about-text', {
         scrollTrigger: {
             trigger: '.about-section',
-            start: 'top 70%',
-            toggleActions: 'play none none reverse'
+            start: 'top 80%',
+            toggleActions: 'play none none none'
         },
-        x: -100,
+        y: 30,
         opacity: 0,
-        duration: 1.2,
+        duration: 0.8,
         ease: 'power2.out'
     });
 
     gsap.from('.about-image', {
         scrollTrigger: {
             trigger: '.about-section',
-            start: 'top 70%',
-            toggleActions: 'play none none reverse'
+            start: 'top 80%',
+            toggleActions: 'play none none none'
         },
-        x: 100,
+        y: 30,
         opacity: 0,
-        duration: 1.2,
+        duration: 0.8,
+        delay: 0.2,
         ease: 'power2.out'
     });
 
@@ -84,17 +96,17 @@ function initScrollAnimations() {
         ease: 'power2.out'
     });
 
-    // Menu items stagger animation
+    // Menu items stagger animation - simplified to prevent disappearing
     gsap.from('.menu-item', {
         scrollTrigger: {
             trigger: '.menu-section',
-            start: 'top 70%',
-            toggleActions: 'play none none reverse'
+            start: 'top 80%',
+            toggleActions: 'play none none none'
         },
-        y: 100,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.2,
+        y: 30,
+        opacity: 0.2,
+        duration: 0.6,
+        stagger: 0.15,
         ease: 'power2.out'
     });
 
@@ -240,6 +252,11 @@ function closeInquiryModal() {
 
 // ALL DOM-dependent code inside DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
+    // Ensure page starts at top
+    setTimeout(() => {
+        window.scrollTo(0, 0);
+    }, 0);
+    
     // Mobile Navigation Toggle
     const burger = document.querySelector('.burger');
     const nav = document.querySelector('.nav-links');
