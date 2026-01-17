@@ -208,65 +208,81 @@ function initLazyLoading() {
     });
 }
 
-// Smooth page load
-window.addEventListener('load', () => {
-    document.body.style.opacity = '1';
-});
-
-// Initialize everything when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    randomMobileImage(); // Run first
-    initScrollAnimations();
-    initLazyLoading();
-});
-
-// Also run immediately in case DOM is already loaded
-if (document.readyState === 'loading') {
-    // DOM still loading, DOMContentLoaded will fire
-} else {
-    // DOM already loaded
-    randomMobileImage();
-}
-
-// Show random image on mobile
-function randomMobileImage() {
-    // Only run on mobile
-    if (window.innerWidth <= 768) {
-        const gridItems = document.querySelectorAll('.grid-item');
-        console.log('Mobile detected. Grid items found:', gridItems.length);
-        
-        if (gridItems.length > 0) {
-            // Remove mobile-visible from all items first
-            gridItems.forEach(item => item.classList.remove('mobile-visible'));
-            
-            // Pick random index
-            const randomIndex = Math.floor(Math.random() * gridItems.length);
-            console.log('Showing image at index:', randomIndex);
-            
-            // Add visible class to random item
-            gridItems[randomIndex].classList.add('mobile-visible');
-        }
-    } else {
-        // On desktop, make sure all are visible
-        const gridItems = document.querySelectorAll('.grid-item');
-        gridItems.forEach(item => item.classList.remove('mobile-visible'));
-    }
-}
-
-// Run on window resize too
-window.addEventListener('resize', () => {
-    randomMobileImage();
-});
 
 // Refresh ScrollTrigger on window resize
 window.addEventListener('resize', () => {
     ScrollTrigger.refresh();
+    randomMobileImage();
 });
 
 // Smooth scrolling configuration
 ScrollTrigger.config({
     limitCallbacks: true,
     syncInterval: 150
+});
+
+// Show random image on mobile - DEFINED BEFORE USE
+function randomMobileImage() {
+    if (window.innerWidth <= 768) {
+        const gridItems = document.querySelectorAll('.grid-item');
+        if (gridItems.length > 0) {
+            gridItems.forEach(item => item.classList.remove('mobile-visible'));
+            const randomIndex = Math.floor(Math.random() * gridItems.length);
+            gridItems[randomIndex].classList.add('mobile-visible');
+        }
+    } else {
+        const gridItems = document.querySelectorAll('.grid-item');
+        gridItems.forEach(item => item.classList.remove('mobile-visible'));
+    }
+}
+
+// SINGLE DOMContentLoaded for everything
+document.addEventListener('DOMContentLoaded', () => {
+    randomMobileImage();
+    initScrollAnimations();
+    initLazyLoading();
+    
+    // Inquiry form handler
+    const inquiryForm = document.getElementById('inquiry-form');
+    if (inquiryForm) {
+        inquiryForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('inquiry-name').value;
+            const email = document.getElementById('inquiry-email').value;
+            const phone = document.getElementById('inquiry-phone').value;
+            const message = document.getElementById('inquiry-message').value;
+            
+            if (!email || !email.includes('@')) {
+                document.getElementById('form-error').style.display = 'block';
+                document.getElementById('form-error').textContent = '✗ Please enter a valid email address.';
+                return;
+            }
+            
+            const subject = encodeURIComponent('Inquiry about Gong Bath Session');
+            const body = encodeURIComponent(
+                `Hello Harmonics and Healings,\n\n` +
+                `I am interested in learning more about your Gong Bath sessions.\n\n` +
+                `Name: ${name}\n` +
+                `Email: ${email}\n` +
+                `Phone: ${phone || 'Not provided'}\n\n` +
+                `Questions:\n${message}\n\n` +
+                `Thank you!`
+            );
+            
+            const mailtoLink = `mailto:harmonicsandhealingsny@gmail.com?subject=${subject}&body=${body}`;
+            window.location.href = mailtoLink;
+            
+            document.getElementById('form-success').style.display = 'block';
+            document.getElementById('form-error').style.display = 'none';
+            inquiryForm.style.display = 'none';
+            
+            setTimeout(function() {
+                closeInquiryModal();
+                inquiryForm.style.display = 'block';
+            }, 3000);
+        });
+    }
 });
 
 // Calendar Modal Functions
@@ -286,14 +302,11 @@ function openCalendar(type) {
         return;
     }
     
-    // Hide all calendars first
     const calendars = document.querySelectorAll('.calendar-container');
-    console.log('Found calendars:', calendars.length);
     calendars.forEach(cal => {
         cal.style.display = 'none';
     });
     
-    // Show the selected calendar and update title
     if (type === 'healing') {
         const healingCal = document.getElementById('calendar-healing');
         if (healingCal) {
@@ -314,19 +327,18 @@ function openCalendar(type) {
         }
     }
     
-    // Show modal
-    console.log('Showing modal');
     modal.style.display = 'block';
-    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    document.body.style.overflow = 'hidden';
 }
 
 function closeCalendar() {
     const modal = document.getElementById('calendar-modal');
-    modal.style.display = 'none';
-    document.body.style.overflow = 'auto'; // Restore scrolling
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
 }
 
-// Close modal when clicking outside of it
 window.onclick = function(event) {
     const calendarModal = document.getElementById('calendar-modal');
     const inquiryModal = document.getElementById('inquiry-modal');
@@ -340,7 +352,6 @@ window.onclick = function(event) {
     }
 }
 
-// Close modal with Escape key
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
         closeCalendar();
@@ -348,7 +359,6 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-// Inquiry Modal Functions
 function openInquiryModal() {
     const modal = document.getElementById('inquiry-modal');
     if (modal) {
@@ -363,62 +373,8 @@ function closeInquiryModal() {
         modal.style.display = 'none';
         document.body.style.overflow = 'auto';
         
-        // Reset form
         document.getElementById('inquiry-form').reset();
         document.getElementById('form-success').style.display = 'none';
         document.getElementById('form-error').style.display = 'none';
     }
 }
-
-// Handle inquiry form submission
-document.addEventListener('DOMContentLoaded', function() {
-    const inquiryForm = document.getElementById('inquiry-form');
-    
-    if (inquiryForm) {
-        inquiryForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const name = document.getElementById('inquiry-name').value;
-            const email = document.getElementById('inquiry-email').value;
-            const phone = document.getElementById('inquiry-phone').value;
-            const message = document.getElementById('inquiry-message').value;
-            
-            // Validate email
-            if (!email || !email.includes('@')) {
-                document.getElementById('form-error').style.display = 'block';
-                document.getElementById('form-error').textContent = '✗ Please enter a valid email address.';
-                return;
-            }
-            
-            // Create mailto link
-            const subject = encodeURIComponent('Inquiry about Gong Bath Session');
-            const body = encodeURIComponent(
-                `Hello Harmonics and Healings,\n\n` +
-                `I am interested in learning more about your Gong Bath sessions.\n\n` +
-                `Name: ${name}\n` +
-                `Email: ${email}\n` +
-                `Phone: ${phone || 'Not provided'}\n\n` +
-                `Questions:\n${message}\n\n` +
-                `Thank you!`
-            );
-            
-            const mailtoLink = `mailto:harmonicsandhealingsny@gmail.com?subject=${subject}&body=${body}`;
-            
-            // Open email client
-            window.location.href = mailtoLink;
-            
-            // Show success message
-            document.getElementById('form-success').style.display = 'block';
-            document.getElementById('form-error').style.display = 'none';
-            
-            // Hide form
-            inquiryForm.style.display = 'none';
-            
-            // Close modal after 3 seconds
-            setTimeout(function() {
-                closeInquiryModal();
-                inquiryForm.style.display = 'block';
-            }, 3000);
-        });
-    }
-});
