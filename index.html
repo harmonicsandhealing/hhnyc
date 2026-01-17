@@ -80,7 +80,7 @@
                         <h3>Energy Healing Sessions</h3>
                         <p>Harness the ancient power of crystals and aromatherapy to balance your chakras and amplify your healing journey.</p>
                         <p>Experience the gentle yet powerful effects of energy work. Our practitioners use Reiki and other modalities to clear blockages and restore your natural flow of life force energy.</p>
-                        <a href="#" class="cta-button">Get healed</a>
+                        <a href="#" class="cta-button" onclick="openCalendar('healing'); return false;">Get healed</a>
                     </div>
                 </div>
                 <div class="menu-item" data-scroll data-scroll-speed="1">
@@ -88,7 +88,7 @@
                     <div class="menu-item-content">
                         <h3>Aura Tuning</h3>
                         <p>Working with the subtle field that surrounds and connects us, using the resonance of tuning forks we identify and clear energetic imprints from the past.</p>
-                        <a href="#" class="cta-button">Get tuned</a>
+                        <a href="#" class="cta-button" onclick="openCalendar('in-home'); return false;">Get tuned</a>
                     </div>
                 </div>
                 <div class="menu-item" data-scroll data-scroll-speed="0.8">
@@ -96,7 +96,7 @@
                     <div class="menu-item-content">
                         <h3>Sound Bath</h3>
                         <p>Immerse yourself in the therapeutic vibrations of crystal singing bowls, gongs, and chimes. Our sound baths create a deeply meditative state that promotes healing and relaxation.</p>
-                        <a href="#" class="cta-button">Inquire</a>
+                        <a href="#" class="cta-button" onclick="openCalendar('gong'); return false;">Inquire</a>
                     </div>
                 </div>
             </div>
@@ -112,6 +112,59 @@
             </blockquote>
         </div>
     </section>
+
+    <!-- Calendar Modal -->
+    <div id="calendar-modal" class="calendar-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeCalendar()">&times;</span>
+            <h2 id="modal-title">Schedule Your Session</h2>
+            
+            <!-- Healing Calendar -->
+            <div id="calendar-healing" class="calendar-container" style="display:none;">
+                <div style="width:100%;height:100%;overflow:scroll" id="my-cal-inline-healing"></div>
+                <script type="text/javascript">
+                  (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+                Cal("init", "healing", {origin:"https://app.cal.com"});
+                  Cal.ns.healing("inline", {
+                    elementOrSelector:"#my-cal-inline-healing",
+                    config: {"layout":"month_view"},
+                    calLink: "harmonics-and-healing/healing",
+                  });
+                  Cal.ns.healing("ui", {"hideEventTypeDetails":false,"layout":"month_view"});
+                </script>
+            </div>
+
+            <!-- In-Home Healing Session Calendar -->
+            <div id="calendar-in-home" class="calendar-container" style="display:none;">
+                <div style="width:100%;height:100%;overflow:scroll" id="my-cal-inline-in-home-healing-session"></div>
+                <script type="text/javascript">
+                  (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+                Cal("init", "in-home-healing-session", {origin:"https://app.cal.com"});
+                  Cal.ns["in-home-healing-session"]("inline", {
+                    elementOrSelector:"#my-cal-inline-in-home-healing-session",
+                    config: {"layout":"month_view"},
+                    calLink: "harmonics-and-healing/in-home-healing-session",
+                  });
+                  Cal.ns["in-home-healing-session"]("ui", {"hideEventTypeDetails":false,"layout":"month_view"});
+                </script>
+            </div>
+
+            <!-- Gong Bath Calendar -->
+            <div id="calendar-gong" class="calendar-container" style="display:none;">
+                <div style="width:100%;height:100%;overflow:scroll" id="my-cal-inline-gong"></div>
+                <script type="text/javascript">
+                  (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+                Cal("init", "gong", {origin:"https://app.cal.com"});
+                  Cal.ns.gong("inline", {
+                    elementOrSelector:"#my-cal-inline-gong",
+                    config: {"layout":"month_view"},
+                    calLink: "harmonics-and-healing/gong",
+                  });
+                  Cal.ns.gong("ui", {"hideEventTypeDetails":false,"layout":"month_view"});
+                </script>
+            </div>
+        </div>
+    </div>
 
 
 
