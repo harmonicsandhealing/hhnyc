@@ -405,6 +405,7 @@ body {
     height: 100%;
     background: rgba(0, 0, 0, 0.35);
     z-index: 1;
+    pointer-events: none;
 }
 
 .parallax-content {
@@ -445,13 +446,14 @@ body {
     opacity: 1;
     visibility: visible;
     position: relative;
+    z-index: 10;
 }
 
 .menu-content {
     max-width: 1200px;
     margin: 0 auto;
     position: relative;
-    z-index: 2;
+    z-index: 10;
 }
 
 .menu-content h2 {
@@ -521,6 +523,9 @@ body {
 .menu-item .cta-button {
     margin-top: auto;
     align-self: center;
+    position: relative;
+    z-index: 10;
+    pointer-events: auto;
 }
 
 
