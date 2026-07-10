@@ -212,7 +212,7 @@ function openCalendar(type) {
         const gongCal = document.getElementById('calendar-gong');
         if (gongCal) {
             gongCal.style.display = 'block';
-            modalTitle.textContent = 'Book Sound Bath Session';
+            modalTitle.textContent = 'Book Gong Bath Session';
         }
     }
     
@@ -334,7 +334,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const subject = encodeURIComponent('Inquiry about Gong Bath Session');
             const body = encodeURIComponent(
-                `Hello Harmonics and Healings,\n\n` +
+                `Hello Harmonics and Healing,\n\n` +
                 `I am interested in learning more about your Gong Bath sessions.\n\n` +
                 `Name: ${name}\n` +
                 `Email: ${email}\n` +
