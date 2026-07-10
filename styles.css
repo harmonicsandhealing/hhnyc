@@ -947,3 +947,22 @@ body {
     opacity: 1;
     transform: translateY(0);
 }
+/* Session format labels + dual booking buttons */
+.session-format {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.75rem !important;
+    opacity: 0.6;
+    margin-bottom: 1rem;
+}
+
+.menu-item .cta-button + .cta-button {
+    margin-left: 0.75rem;
+}
+
+@media (max-width: 480px) {
+    .menu-item .cta-button + .cta-button {
+        margin-left: 0;
+        margin-top: 0.75rem;
+    }
+}
