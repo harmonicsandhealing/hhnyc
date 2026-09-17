@@ -144,6 +144,7 @@ async function openClient(clientId) {
         ${client.notes ? `<p class="hint">${escapeHtml(client.notes)}</p>` : ''}
       </div>
       <button class="primary" id="new-session-btn">+ New session</button>
+      ${(sessions || []).length ? `<button class="secondary" id="copy-history-btn">Copy full history</button>` : ''}
       <div id="sessions">
         ${(sessions || []).length ? sessions.map(renderSessionCard).join('') : '<p class="empty-state">No sessions logged yet.</p>'}
       </div>
@@ -152,6 +153,8 @@ async function openClient(clientId) {
   document.getElementById('logout-btn').onclick = doLogout;
   document.getElementById('back-link').onclick = showList;
   document.getElementById('new-session-btn').onclick = () => showNewSessionForm(client);
+  const copyBtn = document.getElementById('copy-history-btn');
+  if (copyBtn) copyBtn.onclick = () => copyFullHistory(client, sessions);
 
   document.querySelectorAll('.tab').forEach(tab => {
     tab.onclick = () => {
@@ -176,6 +179,39 @@ function renderSessionCard(s) {
       <div class="tab-content hidden" data-for="internal">${escapeHtml(s.internal_notes || '—')}</div>
     </div>
   `;
+}
+
+// ---------- copy full history ----------
+function buildHistoryText(client, sessions) {
+  const lines = [
+    `Session history — ${client.name}${client.age ? ' (' + client.age + ' yrs)' : ''}`,
+    client.notes ? `Standing notes: ${client.notes}` : null,
+    ''
+  ].filter(l => l !== null);
+
+  const ordered = [...sessions].sort((a, b) => a.session_date.localeCompare(b.session_date));
+
+  ordered.forEach(s => {
+    lines.push(`--- ${s.session_date} ---`);
+    lines.push(`Internal notes: ${s.internal_notes || '—'}`);
+    if (s.client_followup) lines.push(`Client follow-up sent: ${s.client_followup}`);
+    lines.push('');
+  });
+  return lines.join('\n');
+}
+
+async function copyFullHistory(client, sessions) {
+  const text = buildHistoryText(client, sessions);
+  const btn = document.getElementById('copy-history-btn');
+  const original = btn.textContent;
+  try {
+    await navigator.clipboard.writeText(text);
+    btn.textContent = 'Copied ✓';
+  } catch (e) {
+    // Clipboard API can be blocked (e.g. non-HTTPS, older Safari) — fall back to a selectable prompt
+    window.prompt('Copy this text (Cmd/Ctrl+C, then Enter):', text);
+  }
+  setTimeout(() => { btn.textContent = original; }, 1600);
 }
 
 // ---------- new session ----------
