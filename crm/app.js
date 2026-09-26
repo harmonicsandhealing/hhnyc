@@ -144,7 +144,6 @@ async function openClient(clientId) {
         ${client.notes ? `<p class="hint">${escapeHtml(client.notes)}</p>` : ''}
       </div>
       <button class="primary" id="new-session-btn">+ New session</button>
-      ${(sessions || []).length ? `<button class="secondary" id="copy-history-btn">Copy full history</button>` : ''}
       <div id="sessions">
         ${(sessions || []).length ? sessions.map(renderSessionCard).join('') : '<p class="empty-state">No sessions logged yet.</p>'}
       </div>
@@ -153,8 +152,6 @@ async function openClient(clientId) {
   document.getElementById('logout-btn').onclick = doLogout;
   document.getElementById('back-link').onclick = showList;
   document.getElementById('new-session-btn').onclick = () => showNewSessionForm(client);
-  const copyBtn = document.getElementById('copy-history-btn');
-  if (copyBtn) copyBtn.onclick = () => copyFullHistory(client, sessions);
 
   document.querySelectorAll('.tab').forEach(tab => {
     tab.onclick = () => {
@@ -165,12 +162,22 @@ async function openClient(clientId) {
       card.querySelector(`.tab-content[data-for="${tab.dataset.tab}"]`).classList.remove('hidden');
     };
   });
+
+  document.querySelectorAll('.delete-session-btn').forEach(btn => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      confirmDeleteSession(btn.dataset.sessionId, btn.dataset.sessionDate, client);
+    };
+  });
 }
 
 function renderSessionCard(s) {
   return `
-    <div class="session-card">
-      <div class="date">${s.session_date}</div>
+    <div class="session-card" data-session-id="${s.id}">
+      <div class="date-row">
+        <div class="date">${s.session_date}</div>
+        <button class="delete-session-btn" data-session-id="${s.id}" data-session-date="${s.session_date}" title="Delete this session">Delete</button>
+      </div>
       <div class="tabs">
         <div class="tab active" data-tab="followup">Client follow-up</div>
         <div class="tab" data-tab="internal">Internal notes</div>
@@ -181,37 +188,34 @@ function renderSessionCard(s) {
   `;
 }
 
-// ---------- copy full history ----------
-function buildHistoryText(client, sessions) {
-  const lines = [
-    `Session history — ${client.name}${client.age ? ' (' + client.age + ' yrs)' : ''}`,
-    client.notes ? `Standing notes: ${client.notes}` : null,
-    ''
-  ].filter(l => l !== null);
+// ---------- delete session ----------
+function confirmDeleteSession(sessionId, sessionDate, client) {
+  const overlay = document.createElement('div');
+  overlay.className = 'confirm-overlay';
+  overlay.innerHTML = `
+    <div class="confirm-box">
+      <p>Delete the session from <strong>${escapeHtml(sessionDate)}</strong>? This cannot be undone.</p>
+      <div class="confirm-actions">
+        <button id="confirm-cancel" class="secondary">Cancel</button>
+        <button id="confirm-delete" class="danger">Delete</button>
+      </div>
+      <div id="confirm-error" class="error hidden"></div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
 
-  const ordered = [...sessions].sort((a, b) => a.session_date.localeCompare(b.session_date));
+  document.getElementById('confirm-cancel').onclick = () => overlay.remove();
 
-  ordered.forEach(s => {
-    lines.push(`--- ${s.session_date} ---`);
-    lines.push(`Internal notes: ${s.internal_notes || '—'}`);
-    if (s.client_followup) lines.push(`Client follow-up sent: ${s.client_followup}`);
-    lines.push('');
-  });
-  return lines.join('\n');
-}
-
-async function copyFullHistory(client, sessions) {
-  const text = buildHistoryText(client, sessions);
-  const btn = document.getElementById('copy-history-btn');
-  const original = btn.textContent;
-  try {
-    await navigator.clipboard.writeText(text);
-    btn.textContent = 'Copied ✓';
-  } catch (e) {
-    // Clipboard API can be blocked (e.g. non-HTTPS, older Safari) — fall back to a selectable prompt
-    window.prompt('Copy this text (Cmd/Ctrl+C, then Enter):', text);
-  }
-  setTimeout(() => { btn.textContent = original; }, 1600);
+  document.getElementById('confirm-delete').onclick = async () => {
+    const { error } = await sb.from('sessions').delete().eq('id', sessionId);
+    if (error) {
+      document.getElementById('confirm-error').textContent = error.message;
+      document.getElementById('confirm-error').classList.remove('hidden');
+      return;
+    }
+    overlay.remove();
+    openClient(client.id);
+  };
 }
 
 // ---------- new session ----------

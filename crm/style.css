@@ -221,12 +221,32 @@ button.secondary {
   box-shadow: 0 2px 12px rgba(0,0,0,0.04);
 }
 
+.session-card .date-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+}
+
 .session-card .date {
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--healing-purple);
-  margin-bottom: 0.6rem;
   letter-spacing: 0.5px;
+}
+
+.delete-session-btn {
+  background: none;
+  border: none;
+  color: #b3474c;
+  font-size: 0.75rem;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+}
+
+.delete-session-btn:hover {
+  text-decoration: underline;
 }
 
 .tabs {
@@ -296,3 +316,59 @@ button.secondary {
 }
 
 .hidden { display: none !important; }
+
+/* Delete confirmation overlay */
+.confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  padding: 1.5rem;
+}
+
+.confirm-box {
+  background: var(--paper);
+  border-radius: 10px;
+  padding: 1.5rem;
+  max-width: 340px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+.confirm-box p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0 0 1.2rem;
+  color: var(--text-color);
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.confirm-actions button {
+  flex: 1;
+  padding: 0.7rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.confirm-actions .secondary {
+  background: none;
+  border: 2px solid var(--line);
+  color: var(--text-color);
+}
+
+.confirm-actions .danger {
+  background: #b3474c;
+  border: none;
+  color: white;
+}
